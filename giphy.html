@@ -7,72 +7,96 @@
 <body>
 
 <div id="buttons-view"></div>
+<button id="nfl-button"></button>
+
 
     <div id="main-view"></div>
 
     <form id="form">
-      <label for="user-input">Add a Freakin' Sweet button!</label>
+      <label for="user-input">Add a button fit for Sunday Night!</label>
       <input type="text" id="user-input"><br>
-
-      <!-- Button triggers new movie to be added -->
       <input id="add-button" type="submit" value="Submit">
     </form>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
 
-	var familyGuy = ["Peter Griffin", "Lois Griffin", "Stewie Griffin", "Brian Griffin", "Chris Griffin", "Meg Griffin", "Cleveland Brown", "Quagmire", "Joe Swanson", "Seth Macfarlane", "Mort Goldman", "Carter Pewterschmidt"];
+// Create an array.
+var nflTeams = ["Giants", "Eagles", "Patriots", "Cowboys", "Jaguars", "Falcons", "Saints", "Buccaneers", "Panthers", "Vikings"];
 
-	function displayFGInfo() {
-		var stringFG = $(this).attr("data-name");
-		var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + stringFG + "&apikey=8b237c30be48443782b51ad1032ba6a2&limit=10&rating=g,pg";
+function displayInfo() {
 
-		$.ajax({
-          url: queryURL,
-          method: "GET"
-        }.done(function(response) {
-          console.log(response)
+  // Separate the array into its own data entries.
 
-      		for (var i = 0; i < results.length; i++) {
-            	var newDiv = $("<div>");
+  var oneTeam = $(this).attr("data-name");
 
-	          	var imageUrl = response.data.image_original_url;
-	          	var fgImage = $("<img>");
-	          	fgImage.attr("src", imageUrl);
-	          	fgImage.attr("alt", "Family Guy");
-	          	newDiv.append(fgImage);
+  // Put in the queryURL link with the oneTeam name as the search result
 
-	          	var rating = response.data.rating;
-	          	var fgRating = $("<p>").text("Rating: " + rating);
-	          	newDiv.append(fgRating);
+  var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + oneTeam + "&apikey=8b237c30be48443782b51ad1032ba6a2&limit=10&rating=g,pg";
 
-	          	("#main-view").prepend(newDiv)
-      		}
-      	}));
+  		$.ajax({
+            url: queryURL,
+            method: "GET"
+          }).done(function(response) {
+            console.log(queryURL)
+            // Use ajax to get the search result from the items in your array.
 
-    function renderButtons() {
-    	$("#buttons-view").empty();
+        		for (var i = 0; i < results.length; i++) {
+              	var newDiv = $("<div>");
+                // For each of the results, create a new div.
+
+  	          	var imageUrl = response.data.image_original_url;
+                // Call the response a new variable name for cleaner coding.
+  	          	var nflImage = $("<img>");
+                // Turn it into an image tag.
+  	          	nflImage.attr("src", imageUrl);
+  	          	nflImage.attr("alt", "Various animals and such representing NFL teams");
+                // Add the source and an alt tag.
+  	          	newDiv.append(nflImage);
+                // Append it to the DOM
+
+  	          	var rating = response.data.rating;
+  	          	var nflRating = $("<p>").text("Rating: " + rating);
+  	          	newDiv.append(nflRating);
+
+  	          	("#main-view").prepend(newDiv);
+
+                // Do all the same for the rating.
+        		}
+
+
+})
+
+  };
+
+ // Create a for loop that will turn each string in the array into a button on page load.
+
+   function renderButtons() {
         
-        for (var i = 0; i < familyGuy.length; i++) {
-        	var a = $("<button>");
+        for (var i = 0; i < nflTeams.length; i++) {
+          var i = $("<button>");
           
-          a.addClass("stringFG");
+          i.addClass("nfl-button");
           
-          a.attr("data-name", familyGuy[i]);
+          i.attr(nflTeams[i]);
           
-          a.text(familyGuy[i]);
+          i.text(nflTeams[i]);
           
-          $("#buttons-view").append(a);
+          $("#buttons-view").append(i);
         }
-      }
+      };
+
+// On each button, get the results of the search and display it on the page.
 
       
       $("#add-button").on("click", function(event) {
         event.preventDefault();
-        
-        var stringFG = $("#user-input").val().trim();
 
-        familyGuy.push(stringFG);
+        // Create a new item in your array based on what you type when you click submit. Adds it to the DOM.
+        
+        var stringNFL = $("#user-input").val().trim();
+
+        nflTeams.push(stringNFL);
        
         renderButtons();
     });
